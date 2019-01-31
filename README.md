@@ -1,147 +1,114 @@
-# Jquery Toast Plugin
+# ~ Jquery Toast Plugin Documentation ~
 
-A plugin to show highly customizable notifications to the user. 
+본 문서는 Jquery Toast 의 한글 Documentation 입니다.
 
-<img src="http://i.imgur.com/RRrb0KE.png" />
+저 나름대로 정리해봤습니다. 겹치는 내용이 있을 수 있습니다.
 
-# How to use
+기본 사용법
+$.toast("Test toast message");
 
-- You can install the plugin via Bower:
+var options = {}
 
-    ```js
-    bower install jquery-toast-plugin
-    ```
-    
-    or via `npm`
-    
-    ```js
-    npm install jquery-toast-plugin
-    ```
-    
-    Or directly download the repository and place the content of `dist` wherever you can access them.
-- Include the CSS and JS files.
-- Simply do ```$.toast('Toast message to be shown')``` Of course it would be the world's simplest toast message but believe me **you can do a lot more** with the options.
+$.toast(options);
 
-# Demo
-For some quick demos and a detailed documentation accompanied by the demos for each of the available options can be accessed through http://kamranahmed.info/toast
+기본값
 
-## Quick usage examples
-**Simple textual toast**
-```javascript
-// Non sticky version
-$.toast("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, consequuntur doloremque eveniet eius eaque dicta repudiandae illo ullam. Minima itaque sint magnam dolorum asperiores repudiandae dignissimos expedita, voluptatum vitae velit.")
-// Sticky version
-$.toast({
-  text : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, consequuntur doloremque eveniet eius eaque dicta repudiandae illo ullam. Minima itaque sint magnam dolorum asperiores repudiandae dignissimos expedita, voluptatum vitae velit.",
-  hideAfter : false
-})
-```
+~~~
+$.toast.options = {
+    text: '',                   // String || Array / 문자열의 경우 그대로 $().html()로 출력, 배열의 경우 ul,li에 $().html()하여 출력
+    heading: '',                // String / h1 태그에 담겨 출력. text와 별개로 출력됨
+    showHideTransition: 'fade', // 'fade' || 'slide' || else / jquery의 fade, slide를 메서드를 활용하여 애니메이션
+    allowToastClose: true,      //  close 버튼을 함께 출력. 반환값을 이용한 close 할때는 true 설정 필요
+    hideAfter: 3000,            // Number / 몇 ms 후에 사라질지 설정
+    loader: true,               // 토스트 메세지 위에 progress bar을 출력할 것인지 설정
+    loaderBg: '#9EC600',        // 토스트 메세지 위에 progress bar의 색깔을 설정
+    stack: 5,                   // 토스트 메세지가 최대 몇개까지 쌓일지 설정 (이상의 토스트 메세지가 생성될 경우 나중의 것은 자동 삭제)
+    position: 'bottom-left',    // 'bottom-left' || 'bottom-right' || 'top-right' || 'top-left' || 'bottom-center' || 'top-center' || 'mid-center'
+                                // 토스트 메세지의 생성 위치 설정. .jq-toast-wrap 의 css 속성을 변경하여 추가로 조작 가능
+    bgColor: false,             // String / 토스트 메세지의 배경색 설정. css의 background-color 속성에 들어갈수 있는 값이면 됨.
+    textColor: false,           // String / 토스트 메세지의 글자색 설정. css의 color 속성에 들어갈수 있는 값이면 됨.
+    textAlign: 'left',          // String / 토스트 메세지의 글 정렬 설정. css의 text-align 속성에 들어갈수 있는 값이면 됨.
+    icon: false,                // 'success' || 'error' || 'warning' || 'info' / 토스트 메세지의 사전 설정 사용. 다른 옵션들이 우선시되므로 추가 수정 가능
+    beforeShow: function () {},     //beforeShow 이벤트 바인딩
+    afterShown: function () {},     //afterShown 이벤트 바인딩
+    beforeHide: function () {},     //beforeHide 이벤트 바인딩
+    afterHidden: function () {},    //afterHidden 이벤트 바인딩
+    onClick: function () {}         //onClick 이벤트 바인딩
+};
+~~~
 
-**Toast using HTML as a text**
-```javascript
-// Non sticky
-$.toast("Let's test some HTML stuff... <a href='#'>github</a>")
-// sticky
-$.toast({
-  text : "<strong>Remember!</strong> You can <span style='font-weight: bold; color:red;' class='horribly-styled'>always</span> introduce your own × HTML and <span style='font-size: 18px;'>CSS</span> in the toast.",
-  hideAfter : false
-})
-```
+내부 작동
 
-**Unordered list elements as the text of toast using array**
-```javascript
-// Non sticky version
-$.toast(["Ubuntu : One of it's kind", "Sublime Text : Productivity unleashed", "HeidiSQL : Just love it", "Github : Just Lovely"])
-// Sticky version
-$.toast({
-  text : ["Ubuntu : One of it's kind", "Sublime Text : Productivity unleashed", "HeidiSQL : Just love it", "Github : Just Lovely"],
-  hideAfter : false
-})
-```
+## 1. setup
 
-**Changing the animations**
-```javascript
-$.toast({ 
-  text : "Let's test some HTML stuff... <a href='#'>github</a>", 
-  showHideTransition : 'slide'  // It can be plain, fade or slide
-})
-```
+다음의 속성들을 설정합니다
 
-**Changing the formatting**
-```javascript
-$.toast({ 
-  text : "Let's test some HTML stuff... <a href='#'>github</a>", 
-  showHideTransition : 'slide',  // It can be plain, fade or slide
-  bgColor : 'blue',              // Background color for toast
-  textColor : '#eee',            // text color
-  allowToastClose : false,       // Show the close button or not
-  hideAfter : 5000,              // `false` to make it sticky or time in miliseconds to hide after
-  stack : 5,                     // `fakse` to show one stack at a time count showing the number of toasts that can be shown at once
-  textAlign : 'left',            // Alignment of text i.e. left, right, center
-  position : 'bottom-left'       // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values to position the toast on page
-})
-```
+toast.options.text
+toast.options.heading
+toast.options.bgColor
+toast.options.textColor
+toast.options.textAlign
+toast.options.icon
+toast.options.class
 
-**Resetting the toast**
-```javascript
-var myToast = $.toast('Some toast that needs to be removed.');
-myToast.reset(); // remove the toast "Some toast that needs to be removed"
-```
-What if I want to reset all the toasts at once? You may ask. Well in that case, you can do the following:
-```javascript
-$.toast().reset('all');
-```
+## 2. addToDom
 
-**Updating the toast**
-Suppose, you had shown some toast upon the page, a sticky toast for example and now you want to update the toast. You can do the following
+.jq-toast-wrap이 없으면 추가
 
-```javascript
-var myToast = $.toast({
-  text : 'Some toast that needs to show the success message after the ajax call.',
-  hideAfter : false,
-  bgColor : '#E01A31'
-});
+.jq-toast-wrap에 setup된 toast 메세지 추가
 
-window.setTimeout(function(){
-  myToast.update({
-    text : '<strong>Updated after a few seconds</strong>',
-    bgColor : '#23B65D'
-  });
-}, 5000);
-```
-To learn more about how to use and customize it, head to <a href="http://kamranahmed.info/toast" target="_blank">http://kamranahmed.info/toast</a>. Also you can find a customizer there that will let you modify the look and feel of the toast however you like it.
+toast.options.stack = Number 토스트 메세지의 최대 개수 설정. 최대 개수를 초과하면 가장 처음에 만들어졌던 메세지는 자동으로 삭제됩니다.
 
-<hr>
+## 3. position
 
-You can simply download the repo or if you are in rush the <a href="https://raw.githubusercontent.com/kamranahmedse/jquery-toast-plugin/master/jquery.toast.min.css" target="_blank">minified CSS</a> or <a href="https://raw.githubusercontent.com/kamranahmedse/jquery-toast-plugin/master/jquery.toast.css">non-minified CSS</a> can be found and <a href="https://raw.githubusercontent.com/kamranahmedse/jquery-toast-plugin/master/jquery.toast.min.js" target="_blank">minified JS</a> and <a href="https://raw.githubusercontent.com/kamranahmedse/jquery-toast-plugin/master/jquery.toast.js" target="_blank">non minified JS</a> can also be found.
+toast.options.position 토스트 메세지의 위치를 지정합니다.
 
-# Features
-<ul>
-  <li>Show different types of toasts i.e. informational, warning, errors and success</li>
-  <li>Custom <strong>toast background color</strong> and <strong>text color</strong></li>
-  <li>Ability to <strong>hack the CSS</strong> to add your own thing</li>
-  <li>
-    <strong>Text can be</strong> provided in the form of
-    <ul>
-      <li><strong>Array</strong> (It's elements will be changed to an un ordered list)</li>
-      <li><strong>Simple text</strong></li>
-      <li><strong>HTML</strong></li>
-    </ul>
-  </li>
-  <li><strong>Events support</strong> i.e. <code>beforeHide</code>, <code>afterHidden</code>, <code>beforeShow</code>, <code>afterShown</code></li>
+## 4.bindToast
 
-  <li><code>Fade</code> and <code>Slide</code> show/hide transitions support (More to come)</li>
-  <li>Supports showing the loader for the toast</li>
-  <li>You can <strong>position the toast, wherever you want</strong> there is support for <code>top-left</code>, <code>top-right</code> <code>bottom-left</code> and <strong>bottom-right</strong>, <code>top-center</code>, <code>bottom-center</code> and <code>mid-center</code> ...sighs! That's a whole lot of options, isn't it? No, you say. Ok then here is the most exciting thing, you can also introduce <strong>your own positioning</strong> just <strong>by passing a simple js object</strong> containing <code>{ top: - , bottom: -, left: -, right: - }</code> </li>
+토스트 메세지에 이벤트를 바인딩합니다
 
-  <li>Ability to add <strong>sticky toast</strong></li>
+토스트 메세지 옵션의 이벤트를 실제 이벤트와 이어주는 역할을 합니다.
 
-  <li>Optional <strong>stack length can be defined</strong> (i.e. maximum number of toasts that can be shown at once)</li>
+## 4-1 processLoader 작동
 
-</ul>
+processLoader은 토스트 메세지 상단에 주황색(기본값) progress bar
 
-Please report any bugs or features you would like added.
+processLoader은 toastEl의 afterShown 이벤트에 호출
 
-# Copyright
+this.options.hideAfter에 숫자값이 들어있거나(this.options.hideAfter는 (숫자)ms 이후에 자동으로 닫히는 속성) options.loader이 true이면 동작
 
-MIT © [Kamran Ahmed](http://kamranahmed.info)
+## 5. animate
+
+먼저 beforeShow 이벤트를 fire 합니다.
+
+this.options.showHideTransition.toLowerCase()에 따라 fade 혹은 slide, show 합니다.
+
+그 뒤에 afterShown 이벤트를 fire 합니다.
+
+this.hideAfter에 숫자값이 있어 자동으로 사라지는 경우에, 
+
+this.options.hideAfter 값만큼 setTimeout하여 
+
+먼저 beforeHide 이벤트를 fire합니다.
+
+this.options.showHideTransition.toLowerCase()에 따라 fade 혹은 slide, hide 합니다.
+
+그 뒤에 afterHide 이벤트를 fire합니다.
+
+beforeHide에 숫자값이 없는경우는 bindToast에서 bind한 onclick 이벤트에 beforeHide와 afterHidden 이벤트가 fire됩니다.
+
+## 6. return
+
+$.toast() 는 객체를 반환합니다.
+
+객체는 reset, update, close 메서드를 가지고 있습니다.
+
+$.toast().reset(what)
+$.toast().update(options)
+$.toast().close()
+
+reset의 경우 인자로 all을 넣으면 전체 토스트 메세지를 삭제합니다. 그 외의 모든 경우는 자기 자신만을 삭제합니다.
+
+update의 경우 setup과 bind 과정을 다시합니다. 따라서 hideAfter 시간을 고치는건 의미가 없습니다.
+
+close의 경우 allowToastClose가 false로 되어있으면 close()메서드를 사용해도 꺼지지 않습니다.
