@@ -43,13 +43,13 @@ $.toast.options = {
 
 다음의 속성들을 설정합니다
 
-toast.options.text
-toast.options.heading
-toast.options.bgColor
-toast.options.textColor
-toast.options.textAlign
-toast.options.icon
-toast.options.class
+toast.options.text  
+toast.options.heading  
+toast.options.bgColor  
+toast.options.textColor  
+toast.options.textAlign  
+toast.options.icon  
+toast.options.class  
 
 ## 2. addToDom
 
